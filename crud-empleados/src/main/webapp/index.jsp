@@ -53,6 +53,37 @@
 			}
 		%>
 	</ul>
+	
+	<!-- El siguiente enlace es un elemento HTML llamado enlace hipertexto o anchoar, o 
+	llamado en los entornos de desarrollo ancla. 
+	Cuando se haga click en dicho enlace
+	se va a generar una peticion (request), a traves del protocolo HTTP (Hipertext 
+	Transfer Protocol) (Protocolo de Transferencia de Hipertexto), que es un protocolo
+	especialmente diseñado para que viaje a traves del mismo documentos HTML, audio, 
+	video, imagenes, PDF, JavaScripts, hojas de estilo en cascada (CSS), etc.
+	Dicha peticion tiene que ser recibida por el Controlador que es un Servlet. 
+	¿Que es un Servlet? Pues es una clase de Java, que implementa unas interfaces para 
+	manejar peticiones recibidas mediante el protocolo HTTP y que puede generar la 
+	respuesta mediante codigo HTML o utilizar una vista para mostrar la respuesta a la 
+	peticion recibida. Normalmente el Servlet se comunica con el modelo para, a traves 
+	del procotolo JDBC (Java Data Base Connectivity) acceder a la base de datos -->
+	
+<!-- 	El patron MVC no se implementa de forma aislada sino que se implementa conjuntamente
+	con el patron Facade, que es patron de diseño que divide el proyecto en distintas
+	capas que el objetivo es ocultar la complejidad de una capa a otra, en tal sentido 
+	se acostumbra a tener, por lo menos, las siguientes capas, que son paquetes:
+	
+	1- Capa DAO (Data Access Object), tambien se le llama Repository
+	2- Capa de Model (Modelo)
+	3- La capa de Servicios, que son interfaces con clases concretas que las 
+	implementan.
+	4- La de controladores -->
+	
+	<!-- Cuando en el atributo href del elemento <a></a> aparece el simbolo de numero
+	o almohadilla, la peticion no viaja a ninguna parte, y se utiliza temporalmente
+	con propositos de prueba, porque realmente el valor del atributo href debe ser
+	el Servlet que recibe la peticion -->
+	<a href="#">Recuperar un listado de todos los empleados</a>
 </body>
 </html>
 
