@@ -83,7 +83,7 @@
 	o almohadilla, la peticion no viaja a ninguna parte, y se utiliza temporalmente
 	con propositos de prueba, porque realmente el valor del atributo href debe ser
 	el Servlet que recibe la peticion -->
-	<a href="#">Recuperar un listado de todos los empleados</a>
+	<a href="MainController">Recuperar un listado de todos los empleados</a>
 </body>
 </html>
 
