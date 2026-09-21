@@ -6,8 +6,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 import com.example.dao.DBConexion;
+import com.example.model.Empleado;
+import com.example.service.EmpleadoService;
+import com.example.service.EmpleadoServiceImpl;
 
 /**
  * Servlet implementation class MainController
@@ -52,6 +57,27 @@ public class MainController extends HttpServlet {
 		 * try { dbConexion.getConexion(); } catch (ClassNotFoundException e) { // TODO
 		 * Auto-generated catch block e.printStackTrace(); }
 		 */
+		
+		/* Conectar a la capa de servicio, es decir, al servicio de Empleado. 
+		 * ¿Como me conecto al servicio de empleado? Pues declarando una variable
+		 * del tipo EmpleadoService, que es la interface y no la clase que implementa
+		 * la interface */
+		
+		EmpleadoService empleadoService = new EmpleadoServiceImpl();
+		
+		try {
+			List<Empleado> empleados = empleadoService.dameEmpleados();
+			
+			/* Un Servlet puede devolver la respuesta generando codigo HTML o
+			 * utilizando una vista y mandar lo que hay que mostrar en dicha 
+			 * vista como atributos de dicha vista */
+			request.getRequestDispatcher("listado.jsp")
+					.forward(request, response);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
