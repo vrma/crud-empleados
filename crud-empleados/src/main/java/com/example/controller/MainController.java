@@ -71,6 +71,14 @@ public class MainController extends HttpServlet {
 			/* Un Servlet puede devolver la respuesta generando codigo HTML o
 			 * utilizando una vista y mandar lo que hay que mostrar en dicha 
 			 * vista como atributos de dicha vista */
+			
+			/* ¿Como enviar la lista de emleados como un atributo de la peticion?
+			 * Rta. Utilizando el objeto request al cual tenemos acceso porque 
+			 * se inyecta o lo recibe como parametro el metodo doGet y que podemos
+			 * utilizar todos sus metodos sin tener que hacer nada de nada */
+			
+			request.setAttribute("empleados", empleados);
+			
 			request.getRequestDispatcher("listado.jsp")
 					.forward(request, response);
 			
