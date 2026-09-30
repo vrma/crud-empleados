@@ -55,25 +55,30 @@
 			<input id="primerApellido" name="primerApellido" type="text" placeholder="Primer apellido aquí "
 				title="Se solicita el primer apellido, que es requerido">
 			<label for="segundoApellido">Segundo Apellido: </label>
-			<input id="segundoApellido" type="text" placeholder="No es obligatorio">
+			<input id="segundoApellido" name="segundoApellido" 
+			     type="text" placeholder="No es obligatorio">
 			<label for="fechaAlta">Fecha de Alta: </label>
-			<input id="fechaAlta" type="date">
+			<input id="fechaAlta" name="fechaAlta" type="date">
 			<label for="salario">Salario: </label>
-			<input id="salario" type="text">
+			<input id="salario" name="salario" type="text">
 			<fieldset>
 				<legend>Genero</legend>
 					<label for="hombre">Hombre: </label>
-					<input id="hombre" type="radio" name="genero">
+					<input id="hombre" type="radio" name="genero" value="HOMBRE">
 					<label for="mujer">Mujer: </label>
-					<input id="mujer" type="radio" name="genero">
+					<input id="mujer" type="radio" name="genero" value="MUJER">
 					<label for="otro">Otro: </label>
-					<input id="otro" type="radio" name="genero">
+					<input id="otro" type="radio" name="genero" value="OTRO">
 			</fieldset>
 			<label for="foto">Foto del Empleado: </label>
 			<input id="foto" type="file">
 			<label for="dpto">Departamento: </label>
-			<select id="dpto">
+			<select id="dpto" name="dpto">
 				<option></option>
+				<!-- La lista de departamentos se debe de traer de la tabla 
+				departamentos de la base de datos, porque de esta manera se pueden
+				agregar o eliminar departamentos sin tener que modificar el codigo
+				de nuestra aplicacion WEB  -->
 				<option value="1">RRHH</option>
 				<option value="2">INFORMATICA</option>
 				<option value="3">CONTABILIDAD</option>
