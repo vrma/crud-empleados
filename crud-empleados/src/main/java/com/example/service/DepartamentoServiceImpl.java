@@ -12,7 +12,7 @@ import com.example.model.Departamento;
 public class DepartamentoServiceImpl implements DepartamentoService {
 
 	@Override
-	public List<Departamento> getDepartamentos() {
+	public List<Departamento> getDepartamentos() throws SQLException {
 		
 		// Conectar con la capa DAO
 		DBConexion dbConexion = new DBConexion("root", "Temp2026");
@@ -22,6 +22,20 @@ public class DepartamentoServiceImpl implements DepartamentoService {
 		
 		try {
 			connection = dbConexion.getConexion();
+			rs = dbConexion.getDepartamentos(connection);
+			
+			// Recorrer el ResultSet, que es la variable rs, y crear 
+			// una lista de departamentos
+			
+			while (rs.next()) {
+				try {
+					departamentos.add(new Departamento(rs.getInt("id"), 
+							rs.getString("nombre")));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
