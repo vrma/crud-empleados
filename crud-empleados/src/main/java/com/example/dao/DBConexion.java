@@ -119,6 +119,33 @@ public class DBConexion {
 	
 		return rs;
 	}
+
+	/*
+	 * Metodo que recupera todos los registros de la tabla de departamentos
+	 */
+	public ResultSet getDepartamentos(Connection connection) {
+		
+		ResultSet rs = null;
+		String query = "select * from departamentos";
+		
+		try {
+			Statement stmt = connection.createStatement();
+			rs = stmt.executeQuery(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		
+		
+		return rs;
+	}
+	
+	
+
+
+
+
 }
 
 

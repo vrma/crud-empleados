@@ -42,7 +42,7 @@
 	por metodos diferentes del protocolo HTTP (get para mostrar el formulario y post
 	para recibir los datos del formulario -->
 
-	<h1>Formulario de Alta y Modificacón de Empleado</h1>
+	<h1>Formulario de Alta y Modificacíon de Empleado</h1>
 	
 	<fieldset>
 		<legend>Formulario Alta/Modificacion</legend>
@@ -79,9 +79,7 @@
 				departamentos de la base de datos, porque de esta manera se pueden
 				agregar o eliminar departamentos sin tener que modificar el codigo
 				de nuestra aplicacion WEB  -->
-				<option value="1">RRHH</option>
-				<option value="2">INFORMATICA</option>
-				<option value="3">CONTABILIDAD</option>
+				
 			</select>
 			<label for="telefonos">Telefono(s): </label>
 			<input id="telefonos"
