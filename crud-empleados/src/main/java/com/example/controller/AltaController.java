@@ -6,7 +6,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
+
+import com.example.model.Empleado;
+import com.example.model.Genero;
 
 /**
  * Servlet implementation class AltaController
@@ -52,11 +60,50 @@ public class AltaController extends HttpServlet {
 		String nombreRecibido = request.getParameter("nombre");
 		String primerApellido = request.getParameter("primerApellido");
 		String segundoApellido = request.getParameter("segundoApellido");
+		LocalDate fechaAlta = LocalDate.parse(request.getParameter("fechaAlta"));
+		BigDecimal salario = new BigDecimal(request.getParameter("salario"));
+		Genero genero = Genero.valueOf(request.getParameter("genero"));
+		int dpto = Integer.parseInt(request.getParameter("dpto"));
 		
+		String numerosTelefono = request.getParameter("telefonos");
+		List<String> listadoNumerosTelefono = null;
 		
+		// Comprobar si hemos recibido numerosTelefono y crear listadoNumerosTelefono
+		if (!numerosTelefono.isEmpty()) {
+			
+			String[] arrayNumerosTelefono = numerosTelefono.split(";");
+			listadoNumerosTelefono = Arrays.asList(arrayNumerosTelefono);
+		}
 		
-		LOGGER.info("El nombre del empleado recibido es: " + nombreRecibido);
-		LOGGER.info("El segundo apellido es: " + segundoApellido);
+		String direccionesCorreo = request.getParameter("emails");
+		List<String> listadoDireccionesCorreo = null;
+		
+		if (!direccionesCorreo.isEmpty()) {
+			
+			String[] arrayDireccionesCorreo = direccionesCorreo.split(";");
+			listadoDireccionesCorreo = Arrays.asList(arrayDireccionesCorreo);
+		}
+		
+		// Crear el record empleado 
+		Empleado empleado = new Empleado(0, nombreRecibido, 
+				primerApellido,  segundoApellido, 
+				fechaAlta, null, salario, genero, null, dpto);
+		
+		/**
+		 * A continuacion hay que conectarse a la capa de servicio, donde
+		 * habra un metodo que reciba como parametro el empleado que se va 
+		 * a persistir, conjuntamente con los telefonos y los correos de 
+		 * dicho empleado.
+		 * 
+		 * Este metodo de servicio, se conectara con la capa DAO a un metodo que 
+		 * sera quien realmente guarde en la tabla en el empleado con sus correos
+		 * y telefonos, si los tienes, y (MUY IMPORTANTE) en el marco de una 
+		 * Transaccion.
+		 */
+		
+//		LOGGER.info("El nombre del empleado recibido es: " + nombreRecibido);
+//		LOGGER.info("El segundo apellido es: " + segundoApellido);
+//		LOGGER.info("Numero de telefono recibidos: " + numerosTelefono);
 		
 		
 	}

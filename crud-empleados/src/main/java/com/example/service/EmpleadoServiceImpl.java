@@ -79,7 +79,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 		    		 								null,
 		    			rs.getBigDecimal("salario"),
 		 Genero.valueOf(rs.getString("genero")),
-		    			rs.getString("foto"));
+		    			rs.getString("foto"),
+		    			rs.getInt("departamentos_id"));
 		    			
 		    	// Con el objeto empleado creado se lo podemos pasar como parametro
 		    	// al metodo add(), a continuacion, para ir agregando empleado, 
