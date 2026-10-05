@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Servlet implementation class AltaController
@@ -13,6 +14,8 @@ import java.io.IOException;
 @WebServlet("/AltaController")
 public class AltaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = Logger.getLogger("AltaController");
+	
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -40,6 +43,22 @@ public class AltaController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		/**
+		 * Los datos del formulario se recibiran aqui
+		 * y siempre como cadena de caracteres (String)
+		 */ 
+		
+		String nombreRecibido = request.getParameter("nombre");
+		String primerApellido = request.getParameter("primerApellido");
+		String segundoApellido = request.getParameter("segundoApellido");
+		
+		
+		
+		LOGGER.info("El nombre del empleado recibido es: " + nombreRecibido);
+		LOGGER.info("El segundo apellido es: " + segundoApellido);
+		
+		
 	}
 
 }

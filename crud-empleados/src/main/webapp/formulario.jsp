@@ -1,3 +1,7 @@
+<%@page import="com.example.model.Departamento"%>
+<%@page import="java.util.List"%>
+<%@page import="com.example.service.DepartamentoServiceImpl"%>
+<%@page import="com.example.service.DepartamentoService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -46,19 +50,22 @@
 	
 	<fieldset>
 		<legend>Formulario Alta/Modificacion</legend>
-		<form action="#" method="get">
+		<form action="AltaController" method="post">
 			<label for="nombre">Nombre: </label> 
 			<input id="nombre" name="nombre" type="text" 
 				 placeholder="Su nombre aqui, porfa" 
-			     title="Se solicita el nombre del empleado para darle de alta">
+			     title="Se solicita el nombre del empleado para darle de alta"
+			     required="required">
+			     
 			<label for="primerApellido">Primer Apellido: </label>
 			<input id="primerApellido" name="primerApellido" type="text" placeholder="Primer apellido aquí "
-				title="Se solicita el primer apellido, que es requerido">
+				title="Se solicita el primer apellido, que es requerido"
+				required="required">
 			<label for="segundoApellido">Segundo Apellido: </label>
 			<input id="segundoApellido" name="segundoApellido" 
 			     type="text" placeholder="No es obligatorio">
 			<label for="fechaAlta">Fecha de Alta: </label>
-			<input id="fechaAlta" name="fechaAlta" type="date">
+			<input id="fechaAlta" name="fechaAlta" type="date" required="required">
 			<label for="salario">Salario: </label>
 			<input id="salario" name="salario" type="text">
 			<fieldset>
@@ -73,22 +80,36 @@
 			<label for="foto">Foto del Empleado: </label>
 			<input id="foto" type="file">
 			<label for="dpto">Departamento: </label>
-			<select id="dpto" name="dpto">
+			<select id="dpto" name="dpto" required="required">
 				<option></option>
 				<!-- La lista de departamentos se debe de traer de la tabla 
 				departamentos de la base de datos, porque de esta manera se pueden
 				agregar o eliminar departamentos sin tener que modificar el codigo
 				de nuestra aplicacion WEB  -->
+				<%
+					// Conectarse al servicio de Departamento para recuperar 
+					// una lista de todos los departamentos
+					DepartamentoService service = new DepartamentoServiceImpl();
+					List<Departamento> departamentos = service.getDepartamentos();
+					
+					for (Departamento dpto : departamentos) {
+						%>
+						<option value="<%=dpto.id() %>"><%=dpto.nombre() %></option>
+						<% 	
+					}
+				%>
 				
 			</select>
 			<label for="telefonos">Telefono(s): </label>
 			<input id="telefonos"
+				 name="telefonos"
 			     type="text" 
 			     placeholder="uno o varios, separados por ;"
 			     title="Uno o varios telefonos separados por el punto y la coma">
 			     
 			<label for="emails">Correo(s): </label>
 			<input id="emails"
+			     name="emails"
 			     type="text" 
 			     placeholder="uno o varios, separados por ;"
 			     title="Una o varias direcciones de correo separadas por el punto y la coma">
