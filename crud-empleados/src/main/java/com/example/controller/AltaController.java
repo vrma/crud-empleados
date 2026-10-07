@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,8 @@ import java.util.logging.Logger;
 
 import com.example.model.Empleado;
 import com.example.model.Genero;
+import com.example.service.EmpleadoService;
+import com.example.service.EmpleadoServiceImpl;
 
 /**
  * Servlet implementation class AltaController
@@ -100,6 +103,28 @@ public class AltaController extends HttpServlet {
 		 * y telefonos, si los tienes, y (MUY IMPORTANTE) en el marco de una 
 		 * Transaccion.
 		 */
+		
+		EmpleadoService empleadoService = new EmpleadoServiceImpl();
+		
+		try {
+			empleadoService.persistirEmpleado(empleado,
+					listadoNumerosTelefono, listadoDireccionesCorreo);
+			
+			// Mostrar la vista que contiene la tabla de empleados
+			// a ver si el empleado persistido aparece en ella
+			
+			List<Empleado> empleados = empleadoService.dameEmpleados();
+			
+			request.setAttribute("empleados", empleados);
+			
+			request.getRequestDispatcher("listado.jsp")
+			    .forward(request, response);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		
 //		LOGGER.info("El nombre del empleado recibido es: " + nombreRecibido);
 //		LOGGER.info("El segundo apellido es: " + segundoApellido);

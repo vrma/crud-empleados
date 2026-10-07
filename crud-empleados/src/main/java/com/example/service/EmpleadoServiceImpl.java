@@ -110,4 +110,24 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 		return empleados;
 	}
 
+	@Override
+	public void persistirEmpleado(Empleado empleado, 
+			List<String> numerosTelefono, 
+			List<String> direccionesCorreo) throws SQLException {
+		
+		
+		DBConexion dbConexion = new DBConexion("root", "Temp2026");
+		
+		try {
+			Connection conn = dbConexion.getConexion();
+			dbConexion.persistirEmpleado(conn,
+					empleado, numerosTelefono, direccionesCorreo);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
 }
