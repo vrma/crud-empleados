@@ -245,8 +245,11 @@ public class DBConexion {
 			connection.setAutoCommit(false);
 			
 			// Preparar la ejecucion de la query1
-			
-			pstmt1 = connection.prepareStatement(query1);
+			// Para obtener el id del empleado persistido hay que solicitar que 
+			// nos devuelvan las claves generadas, añadiendo un segundo parametro
+			// al metodo preparedStatement
+			pstmt1 = connection.prepareStatement(query1,
+					Statement.RETURN_GENERATED_KEYS);
 			
 			// La consulta que se va a lanzar hay que completarla, porque
 			// en este punto todavia los parametros variables de la Prepared Statement
@@ -261,21 +264,81 @@ public class DBConexion {
 			pstmt1.setString(7, empleado.genero().name());
 			pstmt1.setInt(8, empleado.dpto());
 			
+			long lastInsertedId = 0L;
+			
 			// Lanzar la consulta para persistir el empleado
 			
-			pstmt1.executeUpdate();
+			int totalRegistrosAfectados = pstmt1.executeUpdate();
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			if (totalRegistrosAfectados > 0) {
+				
+				// Extraer las claves generadas y recorrerlas pafa recuperar el ID
+				// del empleado persistido
+				
+				ResultSet clavesGeneradas = pstmt1.getGeneratedKeys();
+				
+				// clavesGeneradas es un registro, es decir, una sola fila 
+				// con varias columnas
+				
+				if (clavesGeneradas.next()) {
+					
+					// Recuperar el id del empleado que esta en la primera posicion
+					// , es decir, en la primera columna
+					
+					lastInsertedId = clavesGeneradas.getLong(1);
+				}
+				
+				/* Con el lastInsertedId nos podemos dirigir a las tablas de correos y
+				 * telefonos e insertar los correos y los telefonos si es que los tienes,
+				 * por lo cual comprobamos antes que tiene telefonos y/o correos el empleado
+				 * a persistir */
+				
+				// Primero con los telefonos
+				
+				if (numerosTelefono != null && !numerosTelefono.isEmpty()) {
+					
+					pstmt2 = connection.prepareStatement(query2);
+					pstmt2.setInt(2, Math.toIntExact(lastInsertedId));
+					
+					numerosTelefono.forEach(numeroTelefono -> {
+						
+						try {
+							pstmt2.setString(1, numeroTelefono);
+							pstmt2.addBatch();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					});
+					
+					pstmt2.executeBatch();
+					
+				}
+				
+				// Segundo con los correos
+				
+				if (direccionesCorreo != null && ! direccionesCorreo.isEmpty()) {
+					
+					pstmt3 = connection.prepareStatement(query3);
+					pstmt3.setInt(2, Math.toIntExact(lastInsertedId));
+					
+					direccionesCorreo.forEach(email -> {
+						
+						try {
+							pstmt3.setString(1, email);
+							pstmt3.addBatch();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					});
+					
+					pstmt3.executeBatch();
+					
+				}
+			}
 			
 			
 			
