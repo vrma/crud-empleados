@@ -26,40 +26,40 @@ import com.example.service.EmpleadoServiceImpl;
 public class AltaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger("AltaController");
-	
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public AltaController() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, 
-			HttpServletResponse response) throws ServletException, 
-	        IOException {
-		
-		// La peticion (request) de mostrar el formulario de Alta,
-		// se recibe en este metodo, y en respuesta se mostrara 
-		// una vista que podemos llamar formulario.jsp
-		request.getRequestDispatcher("formulario.jsp")
-			.forward(request, response);
+	public AltaController() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		// La peticion (request) de mostrar el formulario de Alta,
+		// se recibe en este metodo, y en respuesta se mostrara
+		// una vista que podemos llamar formulario.jsp
+		request.getRequestDispatcher("formulario.jsp").forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		/**
-		 * Los datos del formulario se recibiran aqui
-		 * y siempre como cadena de caracteres (String)
-		 */ 
-		
+		 * Los datos del formulario se recibiran aqui y siempre como cadena de
+		 * caracteres (String)
+		 */
+		int id = Integer.parseInt(request.getParameter("id"));
 		String nombreRecibido = request.getParameter("nombre");
 		String primerApellido = request.getParameter("primerApellido");
 		String segundoApellido = request.getParameter("segundoApellido");
@@ -67,70 +67,81 @@ public class AltaController extends HttpServlet {
 		BigDecimal salario = new BigDecimal(request.getParameter("salario"));
 		Genero genero = Genero.valueOf(request.getParameter("genero"));
 		int dpto = Integer.parseInt(request.getParameter("dpto"));
-		
+
 		String numerosTelefono = request.getParameter("telefonos");
 		List<String> listadoNumerosTelefono = null;
-		
+
 		// Comprobar si hemos recibido numerosTelefono y crear listadoNumerosTelefono
 		if (!numerosTelefono.isEmpty()) {
-			
+
 			String[] arrayNumerosTelefono = numerosTelefono.split(";");
 			listadoNumerosTelefono = Arrays.asList(arrayNumerosTelefono);
 		}
-		
+
 		String direccionesCorreo = request.getParameter("emails");
 		List<String> listadoDireccionesCorreo = null;
-		
+
 		if (!direccionesCorreo.isEmpty()) {
-			
+
 			String[] arrayDireccionesCorreo = direccionesCorreo.split(";");
 			listadoDireccionesCorreo = Arrays.asList(arrayDireccionesCorreo);
 		}
-		
-		// Crear el record empleado 
-		Empleado empleado = new Empleado(0, nombreRecibido, 
-				primerApellido,  segundoApellido, 
-				fechaAlta, null, salario, genero, null, dpto);
-		
+
+		// Crear el record empleado
+		Empleado empleado = new Empleado(0, nombreRecibido, primerApellido, segundoApellido, fechaAlta, null, salario,
+				genero, null, dpto);
+
 		/**
-		 * A continuacion hay que conectarse a la capa de servicio, donde
-		 * habra un metodo que reciba como parametro el empleado que se va 
-		 * a persistir, conjuntamente con los telefonos y los correos de 
-		 * dicho empleado.
+		 * A continuacion hay que conectarse a la capa de servicio, donde habra un
+		 * metodo que reciba como parametro el empleado que se va a persistir,
+		 * conjuntamente con los telefonos y los correos de dicho empleado.
 		 * 
-		 * Este metodo de servicio, se conectara con la capa DAO a un metodo que 
-		 * sera quien realmente guarde en la tabla en el empleado con sus correos
-		 * y telefonos, si los tienes, y (MUY IMPORTANTE) en el marco de una 
-		 * Transaccion.
+		 * Este metodo de servicio, se conectara con la capa DAO a un metodo que sera
+		 * quien realmente guarde en la tabla en el empleado con sus correos y
+		 * telefonos, si los tienes, y (MUY IMPORTANTE) en el marco de una Transaccion.
 		 */
-		
+
 		EmpleadoService empleadoService = new EmpleadoServiceImpl();
-		
+
+		/**
+		 * Hay que preguntar el valor del id del empleado
+		 * 
+		 * 0: Alta, empleado nuevo (persistirEmpleado()) != 0: Modificacion, empleado
+		 * existente (actualizarEmpleado()).
+		 */
+
 		try {
-			empleadoService.persistirEmpleado(empleado,
-					listadoNumerosTelefono, listadoDireccionesCorreo);
-			
+
+			if (id == 0) {
+
+				// Alta de empleado nuevo
+				empleadoService.persistirEmpleado(empleado,
+						    listadoNumerosTelefono, 
+						    listadoDireccionesCorreo);
+
+			} else {
+
+				// Actualizacion de un empleado existente
+				
+			}
+
 			// Mostrar la vista que contiene la tabla de empleados
 			// a ver si el empleado persistido aparece en ella
-			
+
 			List<Empleado> empleados = empleadoService.dameEmpleados();
-			
+
 			request.setAttribute("empleados", empleados);
-			
-			request.getRequestDispatcher("listado.jsp")
-			    .forward(request, response);
+
+			request.getRequestDispatcher("listado.jsp").forward(request, response);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
+
 //		LOGGER.info("El nombre del empleado recibido es: " + nombreRecibido);
 //		LOGGER.info("El segundo apellido es: " + segundoApellido);
 //		LOGGER.info("Numero de telefono recibidos: " + numerosTelefono);
-		
-		
+
 	}
 
 }

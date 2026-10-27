@@ -445,6 +445,43 @@ public class DBConexion implements AutoCloseable {
 	}
 	
 
+	/**
+	 * Metodo que actualiza la informacion de un empleado existente
+	 */
+	public void actualizarEmpleado(Connection connection, Empleado empleado, 
+			List<String> numerosTelefono, List<String> direccionesCorreo) {
+		
+		// Actualizar empleado
+		String query1 = "UPDATE empresa_crud_empleados.empleados\n"
+				+ "	SET salario=?,nombre=?,fecha_alta=?,genero=?,"
+				+ " departamentos_id=?,apellido1=?,apellido2=?\n"
+				+ "	WHERE id=?";
+		
+		try {
+			PreparedStatement pstmt1 = connection.prepareStatement(query1);
+			pstmt1.setBigDecimal(1, empleado.salario());
+			pstmt1.setString(2, empleado.nombre());
+			pstmt1.setDate(3, Date.valueOf(empleado.fechaAlta()));
+			pstmt1.setString(4, empleado.genero().name());
+			pstmt1.setInt(5, empleado.dpto());
+			pstmt1.setString(6, empleado.apellido1());
+			pstmt1.setString(7, empleado.apellido2());
+			pstmt1.setInt(8, empleado.id());
+			pstmt1.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Elimina los telefonos de un empleado
+		
+		// Eliminar los correos de un empleado
+		
+		// Insertar los telefonos de un empleado
+		
+		// Insertar los correos de un empleado
+		
+	}
 	
 }
 

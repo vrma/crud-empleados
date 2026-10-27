@@ -127,7 +127,8 @@
 			     type="text" 
 			     placeholder="uno o varios, separados por ;"
 			     title="Uno o varios telefonos separados por el punto y la coma"
-			     value="<%=numerosDeTelefonosDelimitados %>">
+			     value="<%=numerosDeTelefonosDelimitados != null ? 
+			    		       numerosDeTelefonosDelimitados : ' ' %>">
 			     
 			<label for="emails">Correo(s): </label>
 			<input id="emails"
@@ -135,7 +136,7 @@
 			     type="text" 
 			     placeholder="uno o varios, separados por ;"
 			     title="Una o varias direcciones de correo separadas por el punto y la coma"
-			     value="<%=emailsDelimitados %>">
+			     value="<%=emailsDelimitados != null ? emailsDelimitados : ' ' %>">
 
 			<br>
 			<br>
