@@ -17,6 +17,7 @@
 	
 		Empleado empleado = (Empleado) request.getAttribute("empleado");
 		String numerosDeTelefonosDelimitados = (String) request.getAttribute("numerosDeTelefonosDelimitados");
+		String emailsDelimitados = (String) request.getAttribute("emailsDelimitados");
 	
 	%>
 	<!-- Para recoger el valor de los controles del formulario, es decir,
@@ -133,7 +134,8 @@
 			     name="emails"
 			     type="text" 
 			     placeholder="uno o varios, separados por ;"
-			     title="Una o varias direcciones de correo separadas por el punto y la coma">
+			     title="Una o varias direcciones de correo separadas por el punto y la coma"
+			     value="<%=emailsDelimitados %>">
 
 			<br>
 			<br>

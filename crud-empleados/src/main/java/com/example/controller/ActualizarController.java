@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 import com.example.model.Empleado;
 import com.example.model.Telefono;
+import com.example.service.CorreoService;
+import com.example.service.CorreoServiceImpl;
 import com.example.service.EmpleadoService;
 import com.example.service.EmpleadoServiceImpl;
 import com.example.service.TelefonoService;
@@ -68,6 +70,17 @@ public class ActualizarController extends HttpServlet {
 			request.setAttribute("numerosDeTelefonosDelimitados", numerosDeTelefonosDelimitados);
 					
 			// Recupero las direcciones de correo del empleado
+			
+			CorreoService correoService = new CorreoServiceImpl();
+			
+			List<String> emails = correoService.dameCorreos(id_empleado);
+			
+			// Direcciones de correo delimitadas por ;
+			
+			String emailsDelimitados = emails.stream()
+					.collect(Collectors.joining(";"));
+			
+			request.setAttribute("emailsDelimitados", emailsDelimitados);
 			
 			request.getRequestDispatcher("formulario.jsp")
 			               .forward(request, response);
