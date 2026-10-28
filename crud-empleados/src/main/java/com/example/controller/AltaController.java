@@ -88,7 +88,7 @@ public class AltaController extends HttpServlet {
 		}
 
 		// Crear el record empleado
-		Empleado empleado = new Empleado(0, nombreRecibido, primerApellido, segundoApellido, fechaAlta, null, salario,
+		Empleado empleado = new Empleado(id, nombreRecibido, primerApellido, segundoApellido, fechaAlta, null, salario,
 				genero, null, dpto);
 
 		/**
@@ -122,6 +122,9 @@ public class AltaController extends HttpServlet {
 			} else {
 
 				// Actualizacion de un empleado existente
+				empleadoService.actualizarEmpleado(empleado,
+						listadoNumerosTelefono, 
+						listadoDireccionesCorreo);
 				
 			}
 

@@ -190,6 +190,22 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 		return m;
 	}
 
+	@Override
+	public void actualizarEmpleado(Empleado empleado, 
+			List<String> numerosTelefono, 
+			List<String> direccionesCorreo) {
+		
+		try (DBConexion dbConexion = new DBConexion("root", "Temp2026");
+				Connection connection = dbConexion.getConexion()) {
+			dbConexion.actualizarEmpleado(connection,
+					empleado, 
+					numerosTelefono, 
+					direccionesCorreo);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
 }
 
 

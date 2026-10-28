@@ -25,6 +25,13 @@ public interface EmpleadoService {
 	// del Dpto.
 	
 	Map<String, Object> detallesEmpleado(int empleado_id); 
+	
+	
+	void actualizarEmpleado(Empleado empleado, 
+			List<String> numerosTelefono, 
+			List<String> direccionesCorreo);
+		
+	
 }
 
 
