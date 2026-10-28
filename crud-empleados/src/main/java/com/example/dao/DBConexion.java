@@ -457,6 +457,23 @@ public class DBConexion implements AutoCloseable {
 				+ " departamentos_id=?,apellido1=?,apellido2=?\n"
 				+ "	WHERE id=?";
 		
+		// Para eliminar los telefonos de un empleado
+		String query2 = "delete from telefonos where empleados_id = ?";
+		
+		// Para eliminar los correos de un empleado
+		String query3 = "delete from correos where empleados_id = ?";
+		
+		// Para insertar telefonos a un empleado
+		String query4 = "INSERT INTO empresa_crud_empleados.telefonos"
+				+ " (numero,empleados_id)\n"
+				+ "	VALUES (?,?)";
+		
+		// Para insertar correos a un empleado
+		String query5 = "INSERT INTO empresa_crud_empleados.correos"
+				+ " (email,empleados_id)\n"
+				+ "	VALUES (?,?)";
+		
+		
 		try {
 			PreparedStatement pstmt1 = connection.prepareStatement(query1);
 			pstmt1.setBigDecimal(1, empleado.salario());
@@ -473,13 +490,45 @@ public class DBConexion implements AutoCloseable {
 			e.printStackTrace();
 		}
 		
-		// Elimina los telefonos de un empleado
+		// Eliminar los telefonos de un empleado,
+		// si tiene modificados los telefonos, es decir, 
+		// si hemos recibido telefonos para este empleado
+		if (numerosTelefono != null && numerosTelefono.size() > 0) {
+			
+			try {
+				PreparedStatement pstmt2 = connection.prepareStatement(query2);
+				pstmt2.setInt(1, empleado.id());
+				pstmt2.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			// Insertar los telefonos de un empleado
+			
+			
+		}
 		
 		// Eliminar los correos de un empleado
+		if (direccionesCorreo != null && direccionesCorreo.size() > 0) {
+			
+			try {
+				PreparedStatement pstmt3 = connection.prepareStatement(query3);
+				pstmt3.setInt(1, empleado.id());
+				pstmt3.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			// Insertar los correos de un empleado
+			
+			
+		}
 		
-		// Insertar los telefonos de un empleado
 		
-		// Insertar los correos de un empleado
+		
+		
 		
 	}
 	
