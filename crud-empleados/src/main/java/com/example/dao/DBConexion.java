@@ -499,12 +499,39 @@ public class DBConexion implements AutoCloseable {
 				PreparedStatement pstmt2 = connection.prepareStatement(query2);
 				pstmt2.setInt(1, empleado.id());
 				pstmt2.executeUpdate();
+				
+		
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 			// Insertar los telefonos de un empleado
+			
+			try {
+				PreparedStatement pstmt4 = connection.prepareStatement(query4);
+				pstmt4.setInt(2, empleado.id());
+				
+				// Recorrer la lista de numeros de telefono, y con cada numero 
+				// de telefono substituir el parametro 1 de la query4
+				
+				numerosTelefono.forEach(numero -> {
+					
+					try {
+						pstmt4.setString(1, numero);
+						pstmt4.addBatch();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				});
+				
+				pstmt4.executeBatch();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			
 		}
@@ -522,6 +549,33 @@ public class DBConexion implements AutoCloseable {
 			}
 			
 			// Insertar los correos de un empleado
+			
+			try {
+				PreparedStatement pstmt5 = connection.prepareStatement(query5);
+				pstmt5.setInt(2, empleado.id());
+				
+				// Recorrer la lista de direcciones de correo, y por cada direccion 
+				// de correo substituir el parametro 1 de la query5
+				
+				direccionesCorreo.forEach(email -> {
+					
+					try {
+						pstmt5.setString(1, email);
+						pstmt5.addBatch();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				});
+				
+				pstmt5.executeBatch();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+
 			
 			
 		}
