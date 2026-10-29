@@ -55,6 +55,8 @@
 						<td><%=empleado.genero() %></td>
 						<td><a href="DetallesController?empleado_id=<%=empleado.id() %>">Detalles</a></td>
 						<td><a href="ActualizarController?empleado_id=<%=empleado.id() %>">Actualizar</a></td>
+						<td><a href="EliminarController?empleado_id=<%=empleado.id() %>">Eliminar</a></td>
+						
 					</tr>
 					
 					

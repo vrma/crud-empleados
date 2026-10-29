@@ -25,28 +25,34 @@ import java.util.logging.Logger;
 import com.example.model.Empleado;
 
 public class DBConexion implements AutoCloseable {
-	
-	/* Utilizando el metodo println() que esta en el paquete System.out nos 
-	 * permite escribir en la consola, o terminal, informacion o mensajes
-	 * respecto a muchas cosas, como por ejemplo si ha habido algun error en el 
-	 * momento de conectarnos a la base de datos, o si la conexion ha sido 
-	 * exitosa, pero el problema es que todos estos mensajes si el Eclipse se cierra o
-	 * se bloquea ya no vamos a poder acceder a ellos, es decir, utilizando la 
-	 * terminologia de la ciber seguridad, no podriamos hacer un analis forence o 
-	 * post morten para saber porqué fallo todo. */
-	
-	/* ¿Como se soluciona lo anterior, entonces? Creando un  Logger para la clase, es
-	 * decir un objeto, que muestre tambien los mensajes de error pero los deje 
-	 * registrados en un archivo .log que se puede analizar 
-	 * posteriormente aunque todo haya fallado */
+
+	/*
+	 * Utilizando el metodo println() que esta en el paquete System.out nos permite
+	 * escribir en la consola, o terminal, informacion o mensajes respecto a muchas
+	 * cosas, como por ejemplo si ha habido algun error en el momento de conectarnos
+	 * a la base de datos, o si la conexion ha sido exitosa, pero el problema es que
+	 * todos estos mensajes si el Eclipse se cierra o se bloquea ya no vamos a poder
+	 * acceder a ellos, es decir, utilizando la terminologia de la ciber seguridad,
+	 * no podriamos hacer un analis forence o post morten para saber porqué fallo
+	 * todo.
+	 */
+
+	/*
+	 * ¿Como se soluciona lo anterior, entonces? Creando un Logger para la clase, es
+	 * decir un objeto, que muestre tambien los mensajes de error pero los deje
+	 * registrados en un archivo .log que se puede analizar posteriormente aunque
+	 * todo haya fallado
+	 */
 
 	private static final Logger LOG = Logger.getLogger("DBConexion");
-	
+
 	private String user;
 	private String password;
-	
-	/* La siguiente propiedad va a almacenar el objeto de conexion a la base
-	 * de datos, para realizar consultas utilizando el lenguaje SQL, posteriormente */
+
+	/*
+	 * La siguiente propiedad va a almacenar el objeto de conexion a la base de
+	 * datos, para realizar consultas utilizando el lenguaje SQL, posteriormente
+	 */
 	private Connection conn;
 
 	// Constructor
@@ -54,65 +60,73 @@ public class DBConexion implements AutoCloseable {
 		super();
 		this.user = user;
 		this.password = password;
-		
+
 	}
-	
-	/* Metodo que permite conectar a la base de datos y 
-	 * devuelve el objeto de coneccion. */
+
+	/*
+	 * Metodo que permite conectar a la base de datos y devuelve el objeto de
+	 * coneccion.
+	 */
 	public Connection getConexion() throws ClassNotFoundException {
-		
+
 		String urlConnection = "jdbc:mysql://localhost:3306/empresa_crud_empleados";
-		
+
 		Properties connectionInfo;
-		
+
 		connectionInfo = new Properties();
-		
+
 		connectionInfo.put("user", this.user);
 		connectionInfo.put("password", this.password);
-		
+
 		try {
-			// La instruccion siguiente es necesaria para registrar el driver 
+			// La instruccion siguiente es necesaria para registrar el driver
 			// de coneccion a la base de datos
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			
+
 			this.conn = DriverManager.getConnection(urlConnection, connectionInfo);
 			LOG.info("Conexion establecida con la base de datos");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOG.log(Level.SEVERE, "Error de coneccion a la base de datos");
 		}
-		
+
 		return this.conn;
 	}
 
-	/* Metodo que recupera todos los registro de la tabla de empleados.
+	/*
+	 * Metodo que recupera todos los registro de la tabla de empleados.
 	 * 
-	 * Tener presente que todos los metodos que lancen consultas de SQL contra
-	 * la base de datos tienen que hacerlo a traves de una conexion existente,
-	 * por eso es que se pasa siempre como parametro al metodo la conexion que 
-	 * devuelve el metodo getConexion().
+	 * Tener presente que todos los metodos que lancen consultas de SQL contra la
+	 * base de datos tienen que hacerlo a traves de una conexion existente, por eso
+	 * es que se pasa siempre como parametro al metodo la conexion que devuelve el
+	 * metodo getConexion().
 	 * 
-	 * Una conexion es un recurso valioso, que tiene que ser cerrada una vez
-	 * que hayamos terminado de utilizarla */
+	 * Una conexion es un recurso valioso, que tiene que ser cerrada una vez que
+	 * hayamos terminado de utilizarla
+	 */
 	public ResultSet getEmpleados(Connection connection) {
-		
+
 		ResultSet rs = null;
-		
-		/* La variable local siguiente, query, almacena la consulta que se va a 
-		 * ejecutar, que por simple que nos parezca, no debemos de escribir 
-		 * directamente sin antes haberla probado en un cliente de conexion a 
-		 * la base de datos, como pueden ser el MySQL Workbench o el DBeaver */
+
+		/*
+		 * La variable local siguiente, query, almacena la consulta que se va a
+		 * ejecutar, que por simple que nos parezca, no debemos de escribir directamente
+		 * sin antes haberla probado en un cliente de conexion a la base de datos, como
+		 * pueden ser el MySQL Workbench o el DBeaver
+		 */
 		String query = "select * from empleados";
-		
-		/* La consulta anterior hay que adecuarla, convertirla a binario, 
-		 * para que el motor de base de datos la entienda, porque ahora 
-		 * mismo esta en lenguaje humano pero las maquinas dicho lenguaje no 
-		 * lo entienden. */
-		
-		/* Para una consulta sin parametros variables se untiliza la interfaz 
-		 * siguiente. */
+
+		/*
+		 * La consulta anterior hay que adecuarla, convertirla a binario, para que el
+		 * motor de base de datos la entienda, porque ahora mismo esta en lenguaje
+		 * humano pero las maquinas dicho lenguaje no lo entienden.
+		 */
+
+		/*
+		 * Para una consulta sin parametros variables se untiliza la interfaz siguiente.
+		 */
 		Statement stmt;
-		
+
 		try {
 			stmt = connection.createStatement();
 			rs = stmt.executeQuery(query);
@@ -120,8 +134,7 @@ public class DBConexion implements AutoCloseable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	
+
 		return rs;
 	}
 
@@ -129,10 +142,10 @@ public class DBConexion implements AutoCloseable {
 	 * Metodo que recupera todos los registros de la tabla de departamentos
 	 */
 	public ResultSet getDepartamentos(Connection connection) {
-		
+
 		ResultSet rs = null;
 		String query = "select * from departamentos";
-		
+
 		try {
 			Statement stmt = connection.createStatement();
 			rs = stmt.executeQuery(query);
@@ -140,123 +153,114 @@ public class DBConexion implements AutoCloseable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
-		
-		
+
 		return rs;
 	}
-	
-	
 
 	/**
-	 * Metodo que persiste (guarda) en la base de datos un empleado con sus correos y 
-	 * telefonos correspondientes, en el marco de una transaccion.
+	 * Metodo que persiste (guarda) en la base de datos un empleado con sus correos
+	 * y telefonos correspondientes, en el marco de una transaccion.
 	 * 
-	 * ¿Que es una transaccion? 
+	 * ¿Que es una transaccion?
 	 * 
-	 * Es un conjunto de operaciones, sentencias de SQL en este caso, que el motor (engine)
-	 * de base de datos ve como si fueran una sola, es una apuesta de todo o nada, es decir, 
-	 * si falla una operacion hay que deshacer todas las demas (rollback), y solamente se 
-	 * confirma la transaccion si todas las operaciones han tenido exito. 
+	 * Es un conjunto de operaciones, sentencias de SQL en este caso, que el motor
+	 * (engine) de base de datos ve como si fueran una sola, es una apuesta de todo
+	 * o nada, es decir, si falla una operacion hay que deshacer todas las demas
+	 * (rollback), y solamente se confirma la transaccion si todas las operaciones
+	 * han tenido exito.
 	 * 
-	 * Ejemplos tipicos de transacciones: 
+	 * Ejemplos tipicos de transacciones:
 	 * 
-	 * 1. Sacar dinero de un cajero automatico.
-	 * 2. Comprar un billete de tren o de avion, o de cualquier cosa.
-	 * 3. Etc.
-	 * @throws SQLException 
+	 * 1. Sacar dinero de un cajero automatico. 2. Comprar un billete de tren o de
+	 * avion, o de cualquier cosa. 3. Etc.
+	 * 
+	 * @throws SQLException
 	 *
 	 */
-	public void persistirEmpleado(Connection connection, 
-			Empleado empleado, 
-			List<String> numerosTelefono, 
+	public void persistirEmpleado(Connection connection, Empleado empleado, List<String> numerosTelefono,
 			List<String> direccionesCorreo) throws SQLException {
-		
+
 		// Se van a ejecutar 3 consultas (queries)
-		// una para insertar el empleado, y con el id del empleado 
+		// una para insertar el empleado, y con el id del empleado
 		// guardado o persistido, se ejecutaran las otras dos consultas
 		// una para insertar los telefonos y otra para insertar los correos
 		// , todo en el marco de una transaccion
-		
+
 		// Persistir empleado
 		/**
-		 * La consulta siguiente se ejecuta mediante un tipo de sentencia de 
-		 * SQL llamada Sentencia Preparada (Prepared Statement), que es la 
-		 * primera barrera de defensa contra los ataques de inyeccion de SQL, 
-		 * ya que se separa la parte fija de la consulta de los parametros 
-		 * variables.
-		 * Por otra parte una Prepared Statement optimiza la ejecucion de las
-		 * consultas y las hace tan rapidas su ejecucion como los procedimientos
-		 * almacenados.
-		 * IMPORTANTE LO SIGUIENTE !!!! Cada vez que se lanza una consulta de 
-		 * SQL entra en accion un elemento del sistema de gestion de bases de
-		 * datos, llamado el analizador de consultas que tiene que estudiar el 
-		 * plan de ejecucion de la consula, es decir, que el analizador de 
-		 * consulta tiene que estudiar lo que hara para proporcionar los 
-		 * resultados de la consulta que se va a ejecutar. Con las sentencias  
-		 * preparadas el plan de ejucion se estudia UNA sola vez y se guarda
-		 * compilado en el motor de ejecucion de base de datos, es decir, en 
-		 * el servidor, de forma tal que la proxima vez que haya que ejecutar
-		 * la misma consulta ya no habra ni que pensar como ejecutarla, 
-		 * solamente se extraera el plan de ejecucion guardado y se le pasaran
-		 * los parametros variables y la consulta se ejecutara muy rapido y 
-		 * en un entorno seguro, porque los parametros variables nunca se 
-		 * se llegan  a encontrar directamente con la parte fija de la consulta
+		 * La consulta siguiente se ejecuta mediante un tipo de sentencia de SQL llamada
+		 * Sentencia Preparada (Prepared Statement), que es la primera barrera de
+		 * defensa contra los ataques de inyeccion de SQL, ya que se separa la parte
+		 * fija de la consulta de los parametros variables. Por otra parte una Prepared
+		 * Statement optimiza la ejecucion de las consultas y las hace tan rapidas su
+		 * ejecucion como los procedimientos almacenados. IMPORTANTE LO SIGUIENTE !!!!
+		 * Cada vez que se lanza una consulta de SQL entra en accion un elemento del
+		 * sistema de gestion de bases de datos, llamado el analizador de consultas que
+		 * tiene que estudiar el plan de ejecucion de la consula, es decir, que el
+		 * analizador de consulta tiene que estudiar lo que hara para proporcionar los
+		 * resultados de la consulta que se va a ejecutar. Con las sentencias preparadas
+		 * el plan de ejucion se estudia UNA sola vez y se guarda compilado en el motor
+		 * de ejecucion de base de datos, es decir, en el servidor, de forma tal que la
+		 * proxima vez que haya que ejecutar la misma consulta ya no habra ni que pensar
+		 * como ejecutarla, solamente se extraera el plan de ejecucion guardado y se le
+		 * pasaran los parametros variables y la consulta se ejecutara muy rapido y en
+		 * un entorno seguro, porque los parametros variables nunca se se llegan a
+		 * encontrar directamente con la parte fija de la consulta
 		 */
 		String query1 = "INSERT INTO empresa_crud_empleados.empleados ("
-				+ "nombre,apellido1,apellido2,fecha_alta,fecha_baja,"
-				+ "salario,genero,departamentos_id)\n"
+				+ "nombre,apellido1,apellido2,fecha_alta,fecha_baja," + "salario,genero,departamentos_id)\n"
 				+ "	VALUES (?,?,?,?,?,?,?,?)";
-		
+
 		// Persistir telefonos del empleado persistido
-		String query2 = "INSERT INTO empresa_crud_empleados.telefonos "
-				+ "(numero,empleados_id)\n"	/**
-				 * Metodo que recupera el nombre de un Departamento dado el id del empleado
-					 */
+		String query2 = "INSERT INTO empresa_crud_empleados.telefonos " + "(numero,empleados_id)\n" /**
+																									 * Metodo que
+																									 * recupera el
+																									 * nombre de un
+																									 * Departamento dado
+																									 * el id del
+																									 * empleado
+																									 */
 				+ "	VALUES (?,?)";
-		
+
 		// Persistir correos del empleado persistido
-		String query3 = "INSERT INTO empresa_crud_empleados.correos "
-				+ "(email,empleados_id)\n"
-				+ "	VALUES (?,?)";
-		
+		String query3 = "INSERT INTO empresa_crud_empleados.correos " + "(email,empleados_id)\n" + "	VALUES (?,?)";
+
 		// Declaracion de las Prepared Statements
 		PreparedStatement pstmt1;
 		PreparedStatement pstmt2;
 		PreparedStatement pstmt3;
-		
+
 		/**
 		 * ¿Como entrar en una transaction?
 		 * 
 		 * A traves del objeto de Connection, invocando al metodo setAutocommit = false
-		 * de esta forma hasta que no se ejecute el metodo commit() no se van a guardar los
-		 * cambios en las tablas de la base de datos
+		 * de esta forma hasta que no se ejecute el metodo commit() no se van a guardar
+		 * los cambios en las tablas de la base de datos
 		 * 
-		 * MUY IMPORTANTE!!! Cuando terminemos hay que poner el Autocommit a true nuevamente,
-		 * porque de lo contrario todos los empleados de la empresa que esten por esa via de
-		 * conexion no estaran guardando la informacion realmente en las tablas de la base de
-		 * datos
+		 * MUY IMPORTANTE!!! Cuando terminemos hay que poner el Autocommit a true
+		 * nuevamente, porque de lo contrario todos los empleados de la empresa que
+		 * esten por esa via de conexion no estaran guardando la informacion realmente
+		 * en las tablas de la base de datos
 		 */
-		
+
 		try {
-			
+
 			// iniciar la transaction
 			// a partir de que se ejecute la sentencia siguiente, cualquier cambio no se
-			// guardara en las tablas de la base de dato, hasta que se haga un  commit
+			// guardara en las tablas de la base de dato, hasta que se haga un commit
 			// explicitamente
 			connection.setAutoCommit(false);
-			
+
 			// Preparar la ejecucion de la query1
-			// Para obtener el id del empleado persistido hay que solicitar que 
+			// Para obtener el id del empleado persistido hay que solicitar que
 			// nos devuelvan las claves generadas, añadiendo un segundo parametro
 			// al metodo preparedStatement
-			pstmt1 = connection.prepareStatement(query1,
-					Statement.RETURN_GENERATED_KEYS);
-			
+			pstmt1 = connection.prepareStatement(query1, Statement.RETURN_GENERATED_KEYS);
+
 			// La consulta que se va a lanzar hay que completarla, porque
 			// en este punto todavia los parametros variables de la Prepared Statement
 			// no han sido completados
-			
+
 			pstmt1.setString(1, empleado.nombre());
 			pstmt1.setString(2, empleado.apellido1());
 			pstmt1.setString(3, empleado.apellido2());
@@ -265,45 +269,46 @@ public class DBConexion implements AutoCloseable {
 			pstmt1.setBigDecimal(6, empleado.salario());
 			pstmt1.setString(7, empleado.genero().name());
 			pstmt1.setInt(8, empleado.dpto());
-			
+
 			long lastInsertedId = 0L;
-			
+
 			// Lanzar la consulta para persistir el empleado
-			
+
 			int totalRegistrosAfectados = pstmt1.executeUpdate();
-			
+
 			if (totalRegistrosAfectados > 0) {
-				
+
 				// Extraer las claves generadas y recorrerlas pafa recuperar el ID
 				// del empleado persistido
-				
+
 				ResultSet clavesGeneradas = pstmt1.getGeneratedKeys();
-				
-				// clavesGeneradas es un registro, es decir, una sola fila 
+
+				// clavesGeneradas es un registro, es decir, una sola fila
 				// con varias columnas
-				
+
 				if (clavesGeneradas.next()) {
-					
+
 					// Recuperar el id del empleado que esta en la primera posicion
 					// , es decir, en la primera columna
-					
+
 					lastInsertedId = clavesGeneradas.getLong(1);
 				}
-				
-				/* Con el lastInsertedId nos podemos dirigir a las tablas de correos y
-				 * telefonos e insertar los correos y los telefonos si es que los tienes,
-				 * por lo cual comprobamos antes que tiene telefonos y/o correos el empleado
-				 * a persistir */
-				
+
+				/*
+				 * Con el lastInsertedId nos podemos dirigir a las tablas de correos y telefonos
+				 * e insertar los correos y los telefonos si es que los tienes, por lo cual
+				 * comprobamos antes que tiene telefonos y/o correos el empleado a persistir
+				 */
+
 				// Primero con los telefonos
-				
+
 				if (numerosTelefono != null && !numerosTelefono.isEmpty()) {
-					
+
 					pstmt2 = connection.prepareStatement(query2);
 					pstmt2.setInt(2, Math.toIntExact(lastInsertedId));
-					
+
 					numerosTelefono.forEach(numeroTelefono -> {
-						
+
 						try {
 							pstmt2.setString(1, numeroTelefono);
 							pstmt2.addBatch();
@@ -311,22 +316,22 @@ public class DBConexion implements AutoCloseable {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						
+
 					});
-					
+
 					pstmt2.executeBatch();
-					
+
 				}
-				
+
 				// Segundo con los correos
-				
-				if (direccionesCorreo != null && ! direccionesCorreo.isEmpty()) {
-					
+
+				if (direccionesCorreo != null && !direccionesCorreo.isEmpty()) {
+
 					pstmt3 = connection.prepareStatement(query3);
 					pstmt3.setInt(2, Math.toIntExact(lastInsertedId));
-					
+
 					direccionesCorreo.forEach(email -> {
-						
+
 						try {
 							pstmt3.setString(1, email);
 							pstmt3.addBatch();
@@ -334,20 +339,17 @@ public class DBConexion implements AutoCloseable {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						
+
 					});
-					
+
 					pstmt3.executeBatch();
-					
+
 				}
 			}
-			
-			
-			
-			
+
 			// Si hemos llegado a este punto es que todo ha ido bien y se puede confirmar
 			// (hacer commit) de todas las sentencias de SQL que no se guardaron en sus
-			// respectivas tablas 
+			// respectivas tablas
 			connection.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -355,58 +357,52 @@ public class DBConexion implements AutoCloseable {
 			// Restituimos el AutoCommit a true nuevamente
 			connection.setAutoCommit(true);
 		}
-		
-		
+
 	}
 
 	@Override
 	public void close() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 		this.conn.close();
-		
+
 	}
-	
-	
+
 	/**
 	 * Metodo que recupera el nombre de un Departamento dado el id del empleado
 	 */
 	public ResultSet nombreDpto(Connection connection, int empleado_id) {
-		
-		String query = "SELECT d.nombre \n"
-				+ "FROM departamentos d JOIN empleados e "
-				+ "on d.id = e.departamentos_id \n"
-				+ "AND  e.id = ?";
-		
+
+		String query = "SELECT d.nombre \n" + "FROM departamentos d JOIN empleados e "
+				+ "on d.id = e.departamentos_id \n" + "AND  e.id = ?";
+
 		ResultSet rs = null;
-		
+
 		try {
 			PreparedStatement pstmt1 = connection.prepareStatement(query);
 			pstmt1.setInt(1, empleado_id);
 			rs = pstmt1.executeQuery();
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return rs;
-		
+
 	}
 
-
 	/**
-	* Metodo que recupera todos los telefonos de un empleado, cuyo id
-	* se pasa como parametro.
-	*/
-	
+	 * Metodo que recupera todos los telefonos de un empleado, cuyo id se pasa como
+	 * parametro.
+	 */
+
 	public ResultSet dameTelefonos(Connection connection, int empleado_id) {
-		
+
 		ResultSet rs = null;
-		
-		String query = "SELECT t.numero \n"
-				+ "FROM telefonos t WHERE t.empleados_id = ?";
-		
+
+		String query = "SELECT t.numero \n" + "FROM telefonos t WHERE t.empleados_id = ?";
+
 		try {
 			PreparedStatement pstmt1 = connection.prepareStatement(query);
 			pstmt1.setInt(1, empleado_id);
@@ -415,22 +411,20 @@ public class DBConexion implements AutoCloseable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		return rs;
 	}
-	
+
 	/**
-	* Metodo que recupera todos los correos de un empleado, cuyo id
-	* se pasa como parametro.
-	*/
-	
+	 * Metodo que recupera todos los correos de un empleado, cuyo id se pasa como
+	 * parametro.
+	 */
+
 	public ResultSet dameCorreos(Connection connection, int empleado_id) {
-		
+
 		ResultSet rs = null;
-		String query = "SELECT c.email \n"
-				+ "from correos c WHERE c.empleados_id = ?";
-		
+		String query = "SELECT c.email \n" + "from correos c WHERE c.empleados_id = ?";
+
 		try {
 			PreparedStatement pstmt1 = connection.prepareStatement(query);
 			pstmt1.setInt(1, empleado_id);
@@ -439,41 +433,32 @@ public class DBConexion implements AutoCloseable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		return rs;
 	}
-	
 
 	/**
 	 * Metodo que actualiza la informacion de un empleado existente
 	 */
-	public void actualizarEmpleado(Connection connection, Empleado empleado, 
-			List<String> numerosTelefono, List<String> direccionesCorreo) {
-		
+	public void actualizarEmpleado(Connection connection, Empleado empleado, List<String> numerosTelefono,
+			List<String> direccionesCorreo) {
+
 		// Actualizar empleado
-		String query1 = "UPDATE empresa_crud_empleados.empleados\n"
-				+ "	SET salario=?,nombre=?,fecha_alta=?,genero=?,"
-				+ " departamentos_id=?,apellido1=?,apellido2=?\n"
-				+ "	WHERE id=?";
-		
+		String query1 = "UPDATE empresa_crud_empleados.empleados\n" + "	SET salario=?,nombre=?,fecha_alta=?,genero=?,"
+				+ " departamentos_id=?,apellido1=?,apellido2=?\n" + "	WHERE id=?";
+
 		// Para eliminar los telefonos de un empleado
 		String query2 = "delete from telefonos where empleados_id = ?";
-		
+
 		// Para eliminar los correos de un empleado
 		String query3 = "delete from correos where empleados_id = ?";
-		
+
 		// Para insertar telefonos a un empleado
-		String query4 = "INSERT INTO empresa_crud_empleados.telefonos"
-				+ " (numero,empleados_id)\n"
-				+ "	VALUES (?,?)";
-		
+		String query4 = "INSERT INTO empresa_crud_empleados.telefonos" + " (numero,empleados_id)\n" + "	VALUES (?,?)";
+
 		// Para insertar correos a un empleado
-		String query5 = "INSERT INTO empresa_crud_empleados.correos"
-				+ " (email,empleados_id)\n"
-				+ "	VALUES (?,?)";
-		
-		
+		String query5 = "INSERT INTO empresa_crud_empleados.correos" + " (email,empleados_id)\n" + "	VALUES (?,?)";
+
 		try {
 			PreparedStatement pstmt1 = connection.prepareStatement(query1);
 			pstmt1.setBigDecimal(1, empleado.salario());
@@ -489,34 +474,33 @@ public class DBConexion implements AutoCloseable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		// Eliminar los telefonos de un empleado,
-		// si tiene modificados los telefonos, es decir, 
+		// si tiene modificados los telefonos, es decir,
 		// si hemos recibido telefonos para este empleado
 		if (numerosTelefono != null && numerosTelefono.size() > 0) {
-			
+
 			try {
 				PreparedStatement pstmt2 = connection.prepareStatement(query2);
 				pstmt2.setInt(1, empleado.id());
 				pstmt2.executeUpdate();
-				
-		
+
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			// Insertar los telefonos de un empleado
-			
+
 			try {
 				PreparedStatement pstmt4 = connection.prepareStatement(query4);
 				pstmt4.setInt(2, empleado.id());
-				
-				// Recorrer la lista de numeros de telefono, y con cada numero 
+
+				// Recorrer la lista de numeros de telefono, y con cada numero
 				// de telefono substituir el parametro 1 de la query4
-				
+
 				numerosTelefono.forEach(numero -> {
-					
+
 					try {
 						pstmt4.setString(1, numero);
 						pstmt4.addBatch();
@@ -525,20 +509,19 @@ public class DBConexion implements AutoCloseable {
 						e.printStackTrace();
 					}
 				});
-				
+
 				pstmt4.executeBatch();
-				
+
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
+
 		}
-		
+
 		// Eliminar los correos de un empleado
 		if (direccionesCorreo != null && direccionesCorreo.size() > 0) {
-			
+
 			try {
 				PreparedStatement pstmt3 = connection.prepareStatement(query3);
 				pstmt3.setInt(1, empleado.id());
@@ -547,18 +530,18 @@ public class DBConexion implements AutoCloseable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			// Insertar los correos de un empleado
-			
+
 			try {
 				PreparedStatement pstmt5 = connection.prepareStatement(query5);
 				pstmt5.setInt(2, empleado.id());
-				
-				// Recorrer la lista de direcciones de correo, y por cada direccion 
+
+				// Recorrer la lista de direcciones de correo, y por cada direccion
 				// de correo substituir el parametro 1 de la query5
-				
+
 				direccionesCorreo.forEach(email -> {
-					
+
 					try {
 						pstmt5.setString(1, email);
 						pstmt5.addBatch();
@@ -567,26 +550,34 @@ public class DBConexion implements AutoCloseable {
 						e.printStackTrace();
 					}
 				});
-				
+
 				pstmt5.executeBatch();
-				
+
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 
-			
-			
 		}
-		
-		
-		
-		
-		
+
 	}
-	
+
+	// Metodo que elimina un empleado con todos sus correos y telefonos
+	public void deleteEmpleado(Connection connection, int empleado_id) {
+		
+		String query = "delete from empleados where id = ?";
+		
+		try {
+			PreparedStatement pstmt = connection.prepareStatement(query);
+			pstmt.setInt(1, empleado_id);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
+
 
 
 
